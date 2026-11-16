@@ -1,5 +1,5 @@
 #ifndef SCALARCONVERTER_HPP
-# define SCALARCONVERTER_HPP_HPP
+# define SCALARCONVERTER_HPP
 
 # include <string>
 # include <exception>
@@ -12,7 +12,7 @@ class ScalarConverter {
         ScalarConverter& operator=(const ScalarConverter& rhs);
         ~ScalarConverter();
     public:
-        static void convert(string literal);
+        static void convert(const std::string literal);
 };
 
 #endif
