@@ -1,11 +1,11 @@
 #include "ScalarConverter.hpp"
-#include <string>
 #include <iostream>
 #include <cctype>
 #include <cstdlib>
 #include <climits>
 #include <cerrno>
 #include <iomanip>
+#include <cfloat>
 
 namespace {
     enum type {
@@ -145,7 +145,18 @@ namespace {
     }
 
     void    convert_float(const std::string& literal) {
-        float   f = static_cast<float>(std::strtod(literal.c_str(), NULL));
+        errno = 0;
+        double  d = std::strtod(literal.c_str(), NULL);
+        if (literal != "-inff" && literal != "+inff" && literal != "nanf") {
+            if (errno == ERANGE || d < -FLT_MAX || d > FLT_MAX) {
+                std::cout << "char: impossible\n"
+                        << "int: impossible\n"
+                        << "float: impossible\n"
+                        << "double: impossible" << std::endl;
+            return;
+            }
+        }
+        float f = static_cast<float>(d);
         print_char(static_cast<double>(f));
         print_int(static_cast<double>(f));
         std::cout << "float: " << f << "f\n";
