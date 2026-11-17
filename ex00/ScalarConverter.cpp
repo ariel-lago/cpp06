@@ -2,6 +2,9 @@
 #include <string>
 #include <iostream>
 #include <cctype>
+#include <cstdlib>
+#include <climits>
+#include <cerrno>
 
 namespace {
     enum type {
@@ -73,7 +76,61 @@ namespace {
         }
         return (dot && digit);
     }
+    type    find_type(const std::string literal) {
+        if (literal.empty())
+            return T_INVALID;
+        else if (isChar(literal))
+            return T_CHAR;
+        else if (isInt(literal))
+            return T_INT;
+        else if (isDouble(literal))
+            return T_DOUBLE;
+        else if (isFloat(literal))
+            return T_FLOAT;
+        return T_INVALID;
+    }
     
+    void    convert_char(const std::string& literal) {
+        char    c = (literal.length() == 3)? literal[1] : literal[0];
+        std::cout << "char: " << c << std::endl; 
+        std::cout << "int: " << static_cast<int>(c) << std::endl;
+        std::cout << "float: " << static_cast<float>(c) << "f\n";
+        std::cout << "double: " << static_cast<double>(c) << std::endl;
+    }
+
+    void    convert_int(const std::string& literal) {
+        errno = 0;
+        long    lit = std::strtol(literal.c_str(), NULL, 10);
+        if (errno == ERANGE || lit < INT_MIN || lit > INT_MAX) {
+            std::cout << "char: impossible\n"
+                    << "int: impossible\n"
+                    << "float: impossible\n"
+                    << "double: impossible" << std::endl;
+            return;
+        }
+        int i = static_cast<int>(lit);
+        std::cout << "char: " << static_cast<char>(i) << std::endl;
+        std::cout << "int: " << i << std::endl;
+        std::cout << "float: " << static_cast<float>(i) << "f\n";
+        std::cout << "double: " << static_cast<double>(i) << std::endl;
+    }
+
+    void    convert_double(const std::string& literal) {
+        double  d = std::strtod(literal.c_str(), NULL);
+        std::cout << "char: " << static_cast<char>(d) << std::endl; 
+        std::cout << "int: " << static_cast<int>(d) << std::endl;
+        std::cout << "float: " << static_cast<float>(d) << "f\n";
+        std::cout << "double: " << d << std::endl;
+    }
+
+    void    convert_float(const std::string& literal) {
+        float   f = static_cast<float>(std::strtod(literal.c_str(), NULL));
+        std::cout << "char: " << static_cast<char>(f) << std::endl; 
+        std::cout << "int: " << static_cast<int>(f) << std::endl;
+        std::cout << "float: " << f << "f\n";
+        std::cout << "double: " << static_cast<double>(f) << std::endl;
+    }
+
 }
 
 ScalarConverter::ScalarConverter() {}
@@ -85,5 +142,22 @@ ScalarConverter& ScalarConverter::operator=(const ScalarConverter& rhs) {
 ScalarConverter::~ScalarConverter() {}
 
 void ScalarConverter::convert(const std::string literal) { 
-
+    type data = find_type(literal);
+    switch (data) {
+        case    T_INVALID:
+            std::cout << "Error: invalid string literal\n";
+            break;
+        case    T_CHAR:
+            convert_char(literal);
+            break;
+        case    T_INT:
+            convert_int(literal);
+            break;
+        case    T_DOUBLE:
+            convert_double(literal);
+            break;
+        case    T_FLOAT:
+            convert_float(literal);
+            break;
+    }
 }
