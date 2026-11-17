@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <climits>
 #include <cerrno>
+#include <iomanip>
 
 namespace {
     enum type {
@@ -95,13 +96,21 @@ namespace {
             std::cout << "char: impossible\n";
             return;
         }
-        if (!std::isprint(static_cast<char>(lit))) {
+        if (!std::isprint(static_cast<int>(lit))) {
             std::cout << "char: Non displayable\n";
             return;
         }
         std::cout << "char: '" << static_cast<char>(lit) << "'\n";
     }
     
+    void print_int(double lit) {
+        if (lit != lit || lit < static_cast<double>(INT_MIN) || lit > static_cast<double>(INT_MAX)) {
+            std::cout << "int: impossible\n";
+            return;
+        }
+        std::cout << "int: " << static_cast<int>(lit) << std::endl;
+    }
+
     void    convert_char(const std::string& literal) {
         char    c = (literal.length() == 3)? literal[1] : literal[0];
         print_char(static_cast<double>(c));
@@ -130,7 +139,7 @@ namespace {
     void    convert_double(const std::string& literal) {
         double  d = std::strtod(literal.c_str(), NULL);
         print_char(d);
-        std::cout << "int: " << static_cast<int>(d) << std::endl;
+        print_int(d);
         std::cout << "float: " << static_cast<float>(d) << "f\n";
         std::cout << "double: " << d << std::endl;
     }
@@ -138,7 +147,7 @@ namespace {
     void    convert_float(const std::string& literal) {
         float   f = static_cast<float>(std::strtod(literal.c_str(), NULL));
         print_char(static_cast<double>(f));
-        std::cout << "int: " << static_cast<int>(f) << std::endl;
+        print_int(static_cast<double>(f));
         std::cout << "float: " << f << "f\n";
         std::cout << "double: " << static_cast<double>(f) << std::endl;
     }
@@ -155,6 +164,7 @@ ScalarConverter::~ScalarConverter() {}
 
 void ScalarConverter::convert(const std::string literal) { 
     type data = find_type(literal);
+    std::cout << std::fixed << std::setprecision(1);
     switch (data) {
         case    T_INVALID:
             std::cout << "Error: invalid string literal\n";
