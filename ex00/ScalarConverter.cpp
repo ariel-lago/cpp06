@@ -89,10 +89,22 @@ namespace {
             return T_FLOAT;
         return T_INVALID;
     }
+
+    void print_char(double lit) {
+        if (lit != lit || lit < 0.0 || lit > 127.0) {
+            std::cout << "char: impossible\n";
+            return;
+        }
+        if (!std::isprint(static_cast<char>(lit))) {
+            std::cout << "char: Non displayable\n";
+            return;
+        }
+        std::cout << "char: '" << static_cast<char>(lit) << "'\n";
+    }
     
     void    convert_char(const std::string& literal) {
         char    c = (literal.length() == 3)? literal[1] : literal[0];
-        std::cout << "char: " << c << std::endl; 
+        print_char(static_cast<double>(c));
         std::cout << "int: " << static_cast<int>(c) << std::endl;
         std::cout << "float: " << static_cast<float>(c) << "f\n";
         std::cout << "double: " << static_cast<double>(c) << std::endl;
@@ -109,7 +121,7 @@ namespace {
             return;
         }
         int i = static_cast<int>(lit);
-        std::cout << "char: " << static_cast<char>(i) << std::endl;
+        print_char(static_cast<double>(i));
         std::cout << "int: " << i << std::endl;
         std::cout << "float: " << static_cast<float>(i) << "f\n";
         std::cout << "double: " << static_cast<double>(i) << std::endl;
@@ -117,7 +129,7 @@ namespace {
 
     void    convert_double(const std::string& literal) {
         double  d = std::strtod(literal.c_str(), NULL);
-        std::cout << "char: " << static_cast<char>(d) << std::endl; 
+        print_char(d);
         std::cout << "int: " << static_cast<int>(d) << std::endl;
         std::cout << "float: " << static_cast<float>(d) << "f\n";
         std::cout << "double: " << d << std::endl;
@@ -125,7 +137,7 @@ namespace {
 
     void    convert_float(const std::string& literal) {
         float   f = static_cast<float>(std::strtod(literal.c_str(), NULL));
-        std::cout << "char: " << static_cast<char>(f) << std::endl; 
+        print_char(static_cast<double>(f));
         std::cout << "int: " << static_cast<int>(f) << std::endl;
         std::cout << "float: " << f << "f\n";
         std::cout << "double: " << static_cast<double>(f) << std::endl;
