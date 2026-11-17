@@ -137,24 +137,35 @@ namespace {
     }
 
     void    convert_double(const std::string& literal) {
+        errno = 0;
         double  d = std::strtod(literal.c_str(), NULL);
+        bool isPseudo = (literal == "-inf" || literal == "+inf" || literal == "nan");
+        if (!isPseudo && errno == ERANGE) {
+            std::cout << "char: impossible\n"
+                  << "int: impossible\n"
+                  << "float: impossible\n"
+                  << "double: impossible" << std::endl;
+            return;
+        }
         print_char(d);
         print_int(d);
-        std::cout << "float: " << static_cast<float>(d) << "f\n";
+        if (!isPseudo && (d < -FLT_MAX || d > FLT_MAX))
+            std::cout << "float: impossible\n";
+        else
+            std::cout << "float: " << static_cast<float>(d) << "f\n";
         std::cout << "double: " << d << std::endl;
     }
 
     void    convert_float(const std::string& literal) {
         errno = 0;
         double  d = std::strtod(literal.c_str(), NULL);
-        if (literal != "-inff" && literal != "+inff" && literal != "nanf") {
-            if (errno == ERANGE || d < -FLT_MAX || d > FLT_MAX) {
-                std::cout << "char: impossible\n"
-                        << "int: impossible\n"
-                        << "float: impossible\n"
-                        << "double: impossible" << std::endl;
+        bool isPseudo = (literal == "-inff" || literal == "+inff" || literal == "nanf");
+        if (!isPseudo && (errno == ERANGE || d < -FLT_MAX || d > FLT_MAX)) {
+            std::cout << "char: impossible\n"
+                    << "int: impossible\n"
+                    << "float: impossible\n"
+                    << "double: impossible" << std::endl;
             return;
-            }
         }
         float f = static_cast<float>(d);
         print_char(static_cast<double>(f));

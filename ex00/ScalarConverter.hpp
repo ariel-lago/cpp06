@@ -2,8 +2,6 @@
 # define SCALARCONVERTER_HPP
 
 # include <string>
-# include <exception>
-# include <ostream>
 
 class ScalarConverter {
     private:

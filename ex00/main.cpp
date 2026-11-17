@@ -3,7 +3,7 @@
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
-        std::cout << "Usage: ./ScalarConverter 'string representation of a c++ literal'\n";
+        std::cout << "Usage: ./convert 'string representation of a c++ literal'\n";
         return 1;
     }
     ScalarConverter:: convert(argv[1]);
