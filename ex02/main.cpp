@@ -47,8 +47,10 @@ void    identify(Base& p) {
 int main(void) {
     std::srand(std::time(NULL));
     Base* test1 = generate();
-    identify(*test1);
+    std::cout << "Pointer identify: ";
     identify(test1);
+    std::cout << "Reference identify: ";
+    identify(*test1);
     delete (test1);
     return (0);
 }
